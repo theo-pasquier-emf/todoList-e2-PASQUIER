@@ -1,0 +1,17 @@
+{
+  "name": "task-manager-app",
+  "version": "1.0.0",
+  "description": "Application de gestion de taches avec Express et frontend statique",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.4",
+    "eslint": "^9.39.4",
+    "globals": "^17.6.0"
+  }
+}

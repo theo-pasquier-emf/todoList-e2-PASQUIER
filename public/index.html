@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestionnaire de taches</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <div class="hero__copy">
+          <p class="eyebrow">Organisation quotidienne</p>
+          <h1>Gardez vos taches nettes, visibles et vraiment actionnables.</h1>
+          <p class="hero__text">
+            Ajoutez, cochez et supprimez vos taches depuis une interface simple,
+            connectee a une API Node.js Express.
+          </p>
+        </div>
+        <div class="hero__stats">
+          <div class="stat-card">
+            <span id="totalTasks">0</span>
+            <p>Taches au total</p>
+          </div>
+          <div class="stat-card">
+            <span id="completedTasks">0</span>
+            <p>Taches terminees</p>
+          </div>
+        </div>
+      </header>
+
+      <main class="layout">
+        <section class="panel form-panel">
+          <div class="panel__header">
+            <p class="panel__eyebrow">Nouvelle tache</p>
+            <h2>Ajouter une priorite</h2>
+          </div>
+
+          <form id="taskForm" class="task-form">
+            <label for="title">Titre</label>
+            <input
+              id="title"
+              name="title"
+              type="text"
+              maxlength="80"
+              placeholder="Ex. Finaliser la maquette"
+              required
+            />
+
+            <label for="description">Description</label>
+            <textarea
+              id="description"
+              name="description"
+              rows="4"
+              maxlength="240"
+              placeholder="Ajoutez quelques details utiles"
+            ></textarea>
+
+            <button type="submit">Ajouter la tache</button>
+          </form>
+        </section>
+
+        <section class="panel list-panel">
+          <div class="panel__header">
+            <p class="panel__eyebrow">Tableau de suivi</p>
+            <h2>Vos taches</h2>
+          </div>
+
+          <p id="feedback" class="feedback" aria-live="polite"></p>
+          <div id="taskList" class="task-list"></div>
+        </section>
+      </main>
+    </div>
+
+    <template id="taskItemTemplate">
+      <article class="task-card">
+        <div class="task-card__top">
+          <label class="checkbox">
+            <input type="checkbox" />
+            <span class="checkbox__visual"></span>
+          </label>
+          <div class="task-card__content">
+            <h3></h3>
+            <p class="task-card__description"></p>
+          </div>
+        </div>
+        <div class="task-card__footer">
+          <span class="task-card__status"></span>
+          <button type="button" class="delete-button">Supprimer</button>
+        </div>
+      </article>
+    </template>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
