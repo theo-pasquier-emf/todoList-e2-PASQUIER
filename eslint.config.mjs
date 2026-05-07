@@ -16,7 +16,7 @@ export default defineConfig([
   },
 
   {
-    files: ["client/**/*.js"],
+    files: ["public/**/*.js"],
     languageOptions: {
       sourceType: "module", // Utilise import/export
       globals: {
@@ -40,7 +40,7 @@ export default defineConfig([
 
 
   {
-    files: ["server/**/*.js"],
+    files: ["./**/*.js"],
     languageOptions: {
       sourceType: "commonjs", // Utilise require/module.exports
       globals: {
