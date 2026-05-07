@@ -2,7 +2,7 @@ name: CI
 
 on:
     push:
-        branches: [ main ]
+        branches: [ "main" ]
 
 env:
     ACR_LOGIN_SERVER: m324demoacrqba.azurecr.io
@@ -10,6 +10,7 @@ env:
 jobs:
     build-docker:
         runs-on: ubuntu-latest
+        environment: ACR
 
         steps:
             - name: Check out Git repository
@@ -36,7 +37,7 @@ jobs:
                   username: ${{ secrets.ACR_USERNAME }}
                   password: ${{ secrets.ACR_PASSWORD }}
 
-            - name: Push Backend/Frontend Docker image to ACR
+            - name: Push Backend Docker image to ACR
               run: |
                   # Tag SHA
                   docker tag todolist-backend:${{ steps.tag.outputs.TAG }} \
@@ -48,13 +49,13 @@ jobs:
                   ${{ env.ACR_LOGIN_SERVER }}/todolist-backend:latest
                   docker push ${{ env.ACR_LOGIN_SERVER }}/todolist-backend:latest
 
-            - name: Update Backend/Frontend image tag in Kubernetes manifest
+            - name: Update Backend image tag in Kubernetes manifest
               run: |
                   FILE="k8s/backend.yml"
                   sed -i "s|image: ${{ env.ACR_LOGIN_SERVER }}/todolist-backend:.*|image: ${{ env.ACR_LOGIN_SERVER }}/todolist-backend:${{ steps.tag.outputs.TAG }}|" "$FILE"
                   grep "image:" "$FILE"
 
-            - name: Commit Backend/Frontend manifests
+            - name: Commit Backend manifests
               run: |
                   git config user.name "github-actions[bot]"
                   git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
