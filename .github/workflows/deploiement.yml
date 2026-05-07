@@ -16,7 +16,7 @@ jobs:
             - name: Check out Git repository
               uses: actions/checkout@v4
 
-            # --------------------
+            # ---------------------
             # Compute image tag
             # --------------------
             - name: Compute image tag
