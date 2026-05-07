@@ -12,20 +12,6 @@ services:
     networks:
       - app_net
 
-  nginx:
-    build:
-      context: .
-      dockerfile: public/Dockerfile
-    container_name: nginx
-    ports:
-      - "8080:80"
-    volumes:
-      - ./public:/usr/share/nginx/html:ro
-    depends_on:
-      - server
-    networks:
-      - app_net
-      
 networks:
   app_net:
     driver: bridge

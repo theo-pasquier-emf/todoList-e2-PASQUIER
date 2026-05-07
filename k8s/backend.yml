@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todolist-backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: todolist-backend
+  template:
+    metadata:
+      labels:
+        app: todolist-backend
+    spec:
+      imagePullSecrets:
+        - name: acr-pull
+      containers:
+        - name: alpintodolistepass-backend
+          image: m324demoacrqba.azurecr.io/todolist-backend:40ea9df
+          ports:
+            - containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: todolist-backend-service
+spec:
+  type: ClusterIP
+  selector:
+    app: todolist-backend
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+
