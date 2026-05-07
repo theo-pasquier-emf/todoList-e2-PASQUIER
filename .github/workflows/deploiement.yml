@@ -1,0 +1,62 @@
+name: CI
+
+on:
+    push:
+        branches: [ main ]
+
+env:
+    ACR_LOGIN_SERVER: m324demoacrqba.azurecr.io
+
+jobs:
+    build-docker:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Check out Git repository
+              uses: actions/checkout@v4
+
+            # --------------------
+            # Compute image tag
+            # --------------------
+            - name: Compute image tag
+              id: tag
+              run: echo "TAG=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
+
+            # --------------------
+            # Build & Push Backend
+            # --------------------
+            - name: Build Backend Docker image
+              run: |
+                  docker build -f ./Dockerfile -t todolist-backend:${{ steps.tag.outputs.TAG }} .
+
+            - name: Log in to Azure Container Registry
+              uses: azure/docker-login@v1
+              with:
+                  login-server: ${{ env.ACR_LOGIN_SERVER }}
+                  username: ${{ secrets.ACR_USERNAME }}
+                  password: ${{ secrets.ACR_PASSWORD }}
+
+            - name: Push Backend/Frontend Docker image to ACR
+              run: |
+                  # Tag SHA
+                  docker tag todolist-backend:${{ steps.tag.outputs.TAG }} \
+                  ${{ env.ACR_LOGIN_SERVER }}/todolist-backend:${{ steps.tag.outputs.TAG }}
+                  docker push ${{ env.ACR_LOGIN_SERVER }}/todolist-backend:${{ steps.tag.outputs.TAG }}
+
+                  # Tag latest
+                  docker tag todolist-backend:${{ steps.tag.outputs.TAG }} \
+                  ${{ env.ACR_LOGIN_SERVER }}/todolist-backend:latest
+                  docker push ${{ env.ACR_LOGIN_SERVER }}/todolist-backend:latest
+
+            - name: Update Backend/Frontend image tag in Kubernetes manifest
+              run: |
+                  FILE="k8s/backend.yml"
+                  sed -i "s|image: ${{ env.ACR_LOGIN_SERVER }}/todolist-backend:.*|image: ${{ env.ACR_LOGIN_SERVER }}/todolist-backend:${{ steps.tag.outputs.TAG }}|" "$FILE"
+                  grep "image:" "$FILE"
+
+            - name: Commit Backend/Frontend manifests
+              run: |
+                  git config user.name "github-actions[bot]"
+                  git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+                  git add k8s/backend.yml
+                  git commit -m "Deploy: use image ${{ env.ACR_LOGIN_SERVER }}/alpinepass-backend:${{ steps.tag.outputs.TAG }}"
