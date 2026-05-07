@@ -13,6 +13,6 @@ jobs:
       - name: Install Node.js dependencies
         run: npm ci
       - name: Run ESLint client with auto-fix
-        run: npm run lint:fix:client
+        run: npm run lint:fix:public
       - name: Run ESLint server with auto-fix
         run: npm run lint:fix:server
