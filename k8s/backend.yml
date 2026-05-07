@@ -15,7 +15,7 @@ spec:
       imagePullSecrets:
         - name: acr-pull
       containers:
-        - name: alpintodolistepass-backend
+        - name: todolist-backend
           image: m324demoacrqba.azurecr.io/todolist-backend:latest
           ports:
             - containerPort: 3000
