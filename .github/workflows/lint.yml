@@ -1,4 +1,5 @@
 name: Lint Code
+
 on:
   push:
     branches:
@@ -7,12 +8,23 @@ on:
 jobs:
   lint-code:
     runs-on: ubuntu-latest
+
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v4
-      - name: Install Node.js dependencies
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
         run: npm ci
+
+        # 4. Vérifier le client (Dossier public)
       - name: Run ESLint client with auto-fix
         run: npm run lint:fix:public
+
+      # 5. Vérifier le serveur (Racine)
       - name: Run ESLint server with auto-fix
         run: npm run lint:fix:server
